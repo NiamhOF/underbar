@@ -194,19 +194,15 @@ var _ = { };
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
-    return _.reduce(collection, function(wasTrue,item) {
-      //console.log(item + " " + iterator + " " +  (iterator(item) == true));
-      if(!wasTrue){
-        return false;
-      }
-      
-      return (typeof(iterator) === 'function') ? (iterator(item) == true) : item ;
-    }
-      ,true)
+  _.every = function (collection, iterator) {
+      // TIP: Try re-using reduce() here.
+      return _.reduce(collection, function (wasTrue, item) {
+          if (!wasTrue || typeof (item) === 'undefined') {
+              return false;
+          }
+          return (typeof (iterator) === 'function') ? (iterator(item) != false) : item;
+      }, true)
   };
-
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
