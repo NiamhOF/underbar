@@ -179,7 +179,6 @@ var _ = { };
 
     return result;
   };
-
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
@@ -196,17 +195,21 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function (collection, iterator) {
       // TIP: Try re-using reduce() here.
-      return _.reduce(collection, function (wasTrue, item) {
-          if (!wasTrue || typeof (item) === 'undefined') {
-              return false;
-          }
-          return (typeof (iterator) === 'function') ? (iterator(item) != false) : item;
+      if(iterator === undefined){
+        iterator = _.identity;
+      }
+      return _.reduce(collection, function (result, item) {
+          return (result && iterator(item)) ? true : false;
       }, true)
   };
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if(iterator === undefined){
+        iterator = _.identity;
+    }
+    return !_.every(collection, function(item){return !iterator(item);});
   };
 
 
