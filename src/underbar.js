@@ -140,7 +140,6 @@ var _ = { };
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
        var result = [];
-       console.log(typeof functionOrKey);
 
        if(typeof functionOrKey === "function"){
           result = _.map(collection, function(item){
@@ -244,6 +243,13 @@ var _ = { };
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    for(var i = 0; i < arguments.length; i += 1){
+      for(var item in arguments[i]){
+        obj[item] = obj[item] !== undefined ? obj[item] : arguments[i][item];
+      }
+    }
+
+    return obj;
   };
 
 
@@ -285,6 +291,12 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+      var history = {};
+    return function(){
+      var key = JSON.stringify(arguments);
+      history[key] = (history[key] === undefined) ? func.apply(null,arguments) : history[key]; 
+      return history[key];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -294,6 +306,10 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        window.setTimeout(function(){
+          func.apply(this, args);
+        },wait);
   };
 
 
@@ -308,6 +324,14 @@ var _ = { };
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+      var rand, copiedArray = array.slice(0);
+      var result = [];
+      while(copiedArray.length > 0){
+        rand = Math.floor(Math.random() * array.length);
+    
+        result.push(copiedArray.splice(rand));
+      }
+    return result;
   };
 
 
