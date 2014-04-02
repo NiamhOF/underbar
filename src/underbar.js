@@ -459,6 +459,37 @@ var _ = { };
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var locked = false;
+    var waitingArgs = [];
+    var lastVal = undefined;
+
+    var callFunc = function(){
+      setTimeout(function(){
+        toggleLocked();
+        if(waitingArgs.length !== 0){
+          throttled(waitingArgs.shift());
+        }
+      }, wait);
+
+      lastVal = func.apply(this, arguments);
+      return lastVal;
+    }
+
+    var toggleLocked = function(){
+      locked = ( locked === true ) ? false : true;
+    }
+
+    var throttled = function(){
+      if( !locked ){
+        toggleLocked();
+        return callFunc();
+      } else{
+        waitingArgs.push(arguments);
+      }
+      return lastVal;
+    }
+    return throttled;
   };
+
 
 }).call(this);
