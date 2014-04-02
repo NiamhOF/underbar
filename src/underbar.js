@@ -411,6 +411,25 @@ var _ = { };
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var uniqueMap = {};
+    var result = [];
+
+    for(var i = 0; i < args.length; i++){
+      for(var j = 0; j < args[i].length; j++){
+        uniqueMap[args[i][j]] = (typeof uniqueMap[args[i][j]] === "undefined") ? 0 : uniqueMap[args[i][j]];
+        uniqueMap[args[i][j]] += 1;
+      }
+    }
+
+    for(var key in uniqueMap){
+      if(uniqueMap[key] === args.length){
+        result.push(key);
+      }
+    }
+
+
+    return result;
   };
 
   // Take the difference between one array and a number of other arrays.
