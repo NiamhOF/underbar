@@ -76,7 +76,7 @@ var _ = { };
       }
     });
 
-    return result; 
+    return result;
   };
 
   // Return all elements of an array that don't pass a truth test.
@@ -84,7 +84,7 @@ var _ = { };
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     var reject = function(val){ return !test(val);}
-     
+
     return _.filter(collection, reject);
 
   };
@@ -294,7 +294,7 @@ var _ = { };
       var history = {};
     return function(){
       var key = JSON.stringify(arguments);
-      history[key] = (history[key] === undefined) ? func.apply(null,arguments) : history[key]; 
+      history[key] = (history[key] === undefined) ? func.apply(null,arguments) : history[key];
       return history[key];
     };
   };
@@ -328,7 +328,7 @@ var _ = { };
       var result = [];
       while(copiedArray.length > 0){
         rand = Math.floor(Math.random() * array.length);
-    
+
         result.push(copiedArray.splice(rand));
       }
     return result;
@@ -346,6 +346,28 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var result;
+    if( typeof iterator === "string" ){
+      result = collection.sort(function( a, b){
+        if(a[iterator] < b[iterator]){
+          return -1;
+        }if(a[iterator] > b[iterator]){
+          return 1;
+        }
+        return 0;
+      });
+    } else {
+      result = collection.sort(function( a, b){
+        if(iterator(a) < iterator(b)){
+          return -1;
+        }if(iterator(a) > iterator(b)){
+          return 1;
+        }
+        return 0;
+      });
+    }
+
+    return result;
   };
 
   // Zip together two or more arrays with elements of the same index
